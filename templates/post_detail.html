@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.text }}</p>
+    <p>Tags -
+        {% for tag in post.tags.all %}
+            <a href="{{ tag.get_absolute_url }}">{{ tag }}</a>
+        {% endfor %}</p>
+    <p>{{ post.date_published }}</p>
+    <p>{{ post.author }}</p>
+    <h4>Comments: {{ post.comment_set.all.count }}</h4>
+    {% if user.is_authenticated %}
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Отправить</button>
+            <input type="hidden" name="post_id" value="{{ post.id }}">
+        </form>
+    {% else %}
+        <p>Чтобы оставить комментарий, авторизуйтесь</p>
+    {% endif %}
+
+    ----------------------------------------
+    {% for comment in post.comments.all %}
+        <p>Author - {{ comment.author }}</p>
+        <p>{{ comment.text }}</p>
+        <p>{{ comment.date_pub }}</p>
+        ----------------------------------------
+    {% endfor %}
+{% endblock %}
