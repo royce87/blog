@@ -27,6 +27,13 @@
         <p>Author - {{ comment.author }}</p>
         <p>{{ comment.text }}</p>
         <p>{{ comment.date_pub }}</p>
-        ----------------------------------------
+        {% if user.is_authenticated and comment.author == user %}
+            <form action="{% url 'delete-comment' comment.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Delete</button>
+            </form>
+        {% endif %}
+
+        <p>----------------------------------------</p>
     {% endfor %}
 {% endblock %}

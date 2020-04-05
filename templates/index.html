@@ -13,7 +13,7 @@
                     {% endfor %}
                     <p>{{ post.date_published }}</p>
                     <p>{{ post.author }}</p>
-                    <p>Comments: {{ post.comment_set.all.count }}</p>
+                    <p>Comments: {{ post.comments.all.count }}</p>
                 {% endfor %}
             </div>
         </div>
