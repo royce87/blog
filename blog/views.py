@@ -11,6 +11,14 @@ def index(request):
     return render(request, 'index.html')
 
 
+def delete_comment(request, comment_id):
+    if request.method == 'POST':
+        comment = Comment.objects.get(pk=comment_id)
+        if request.user == comment.author:
+            comment.delete()
+            return redirect(comment.post.get_absolute_url())
+
+
 class Home(View):
     def get(self, request):
         posts = Post.objects.all()
@@ -27,9 +35,9 @@ class PostDetail(View):
         form = CommentForm(request.POST)
         if form.is_valid():
             form = form.save(commit=False)
+            form.post_id = Post.objects.get(slug=kwargs.get('post_slug')).id
             form.author = request.user
             form.text = request.POST.get('text')
-            form.post_id = request.POST.get('post_id')
             form.save()
         return redirect(request.path)
 
@@ -39,7 +47,6 @@ class TagPosts(View):
         tag = Tag.objects.get(slug=tag_slug)
         return render(request, 'tag.html', {'tag': tag})
 
-
-class CommentDeleteView(DeleteView):
-    model = Comment
-    success_url = '/'
+# class CommentDeleteView(DeleteView):
+#     model = Comment
+#     success_url = '/'

@@ -1,6 +1,7 @@
 from django.db import models
 from django.shortcuts import reverse
 from django.contrib.auth.models import User
+from ckeditor.fields import RichTextField
 
 
 class Tag(models.Model):
@@ -17,7 +18,7 @@ class Tag(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=150, db_index=True)
     slug = models.SlugField(max_length=150, unique=True)
-    text = models.TextField()
+    text = RichTextField(blank=True, null=True)
     date_published = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag, blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -31,7 +32,7 @@ class Post(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    text = models.TextField()
+    text = RichTextField(blank=True, null=True)
     date_pub = models.DateTimeField(auto_now_add=True)
     moderated = models.BooleanField(default=False)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
