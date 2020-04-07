@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form.as_p }}
+        <button type="submit">Создать</button>
+    </form>
+    {% else %}
+        <h3>Please, sign in for creating new post</h3>
+    {% endif %}
+{% endblock %}

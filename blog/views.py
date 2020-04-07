@@ -4,7 +4,7 @@ from django.views import View
 from django.views.generic import DeleteView
 
 from .models import Post, Tag, Comment
-from .forms import CommentForm
+from .forms import CommentForm, CreatePostForm
 
 
 def index(request):
@@ -21,7 +21,7 @@ def delete_comment(request, comment_id):
 
 class Home(View):
     def get(self, request):
-        posts = Post.objects.all()
+        posts = Post.objects.all().order_by('-date_published')
         return render(request, 'index.html', {'posts': posts})
 
 
@@ -47,6 +47,16 @@ class TagPosts(View):
         tag = Tag.objects.get(slug=tag_slug)
         return render(request, 'tag.html', {'tag': tag})
 
-# class CommentDeleteView(DeleteView):
-#     model = Comment
-#     success_url = '/'
+
+class CreatePost(View):
+    def get(self, request):
+        form = CreatePostForm
+        return render(request, 'create_post.html', {'form': form})
+
+    def post(self, request):
+        bound_form = CreatePostForm(request.POST)
+        if bound_form.is_valid():
+            new_post = bound_form.save(commit=False)
+            new_post.author = request.user
+            new_post.save()
+        return redirect('/')
