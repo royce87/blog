@@ -8,23 +8,25 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <title>{% block title %}{% endblock %}</title>
+    <title>Royce blog - {% block title %}{% endblock %}</title>
 </head>
 <body>
-<nav class="navbar navbar-light bg-light">
+<nav class="navbar navbar-dark bg-dark">
     <a class="navbar-brand" href="/">RoyceBlog</a>
-    <a href="/create_post">Create post</a>
+    <a href="/create_post" class="btn btn-dark text-white" role="button">Create post</a>
     <div>
         {% if user.is_authenticated %}
-            {{ user.username }} <a href="/accounts/logout">Logout</a>
+            {{ user.username }} <a href="/accounts/logout" class="btn btn-dark text-white" role="button">Logout</a>
         {% else %}
-            <a href="/accounts/login">Sign in</a>
-            <a href="/accounts/signup">Sign up</a>
+            <a href="/accounts/login" class="btn btn-dark text-white" role="button">Sign in</a>
+            <a href="/accounts/signup" class="btn btn-dark text-white" role="button">Sign up</a>
         {% endif %}
     </div>
 </nav>
-{% block content %}
-{% endblock %}
+<div class="container mt-3">
+    {% block content %}
+    {% endblock %}
+</div>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

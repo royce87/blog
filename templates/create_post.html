@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
-
+{% block title %}Create post{% endblock %}
 {% block content %}
     {% if user.is_authenticated %}
     <form action="" method="post">
         {% csrf_token %}
         {{ form.media }}
         {{ form.as_p }}
-        <button type="submit">Создать</button>
+        <button type="submit" class="btn btn-dark mb-3">Create</button>
     </form>
     {% else %}
-        <h3>Please, sign in for creating new post</h3>
+        <h3>Please sign in for creating new post</h3>
     {% endif %}
 {% endblock %}

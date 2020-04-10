@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import DeleteView
 
-from .models import Post, Tag, Comment
+from .models import Post, Comment
+from taggit.models import Tag
 from .forms import CommentForm, CreatePostForm
 
 
@@ -45,7 +46,9 @@ class PostDetail(View):
 class TagPosts(View):
     def get(self, request, tag_slug):
         tag = Tag.objects.get(slug=tag_slug)
-        return render(request, 'tag.html', {'tag': tag})
+        posts = Post.objects.filter(tags__name__in=[tag])
+        print(posts)
+        return render(request, 'tag.html', {'tag': tag, 'posts': posts})
 
 
 class CreatePost(View):
@@ -59,4 +62,32 @@ class CreatePost(View):
             new_post = bound_form.save(commit=False)
             new_post.author = request.user
             new_post.save()
+            bound_form.save_m2m()
         return redirect('/')
+
+
+class DeletePost(View):
+    def get(self, request, post_id):
+        post = Post.objects.get(id=post_id)
+        return render(request, 'delete_post.html', {'post': post})
+
+    def post(self, request, post_id):
+        post = Post.objects.get(id=post_id)
+        if request.user == post.author:
+            post.delete()
+        return redirect('/')
+
+
+class EditPost(View):
+    def get(self, request, post_id):
+        post = Post.objects.get(id=post_id)
+        bound_form = CreatePostForm(instance=post)
+        return render(request, 'edit_post.html', {'form': bound_form, 'post': post})
+
+    def post(self, request, post_id):
+        post = Post.objects.get(id=post_id)
+        if request.user == post.author:
+            bound_form = CreatePostForm(request.POST, instance=post)
+            if bound_form.is_valid():
+                edited_post = bound_form.save()
+                return redirect(edited_post)

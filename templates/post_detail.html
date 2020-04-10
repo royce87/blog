@@ -1,28 +1,39 @@
 {% extends 'base.html' %}
+{% block title %}{{ post.title }}{% endblock %}
 {% block content %}
     {% include 'post_card.html' %}
-    {% if user.is_authenticated %}
-        <form action="" method="post">
-            {% csrf_token %}
-            {{ form.media }}
-            {{ form.as_p }}
-            <button type="submit">Отправить</button>
-        </form>
-    {% else %}
-        <p>Чтобы оставить комментарий, авторизуйтесь</p>
-    {% endif %}
-
-    ----------------------------------------
-    {% for comment in post.comments.all %}
-        <p>Author - {{ comment.author }}</p>
-        <p>{{ comment.text | safe }}</p>
-        <p>{{ comment.date_pub }}</p>
-        {% if user.is_authenticated and comment.author == user %}
-            <form action="{% url 'delete-comment' comment.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit">Delete</button>
-            </form>
+    <div class="container">
+        {% if user.is_authenticated and post.author == user %}
+            <div class="container-fluid p-0 mb-3">
+                <a class="btn btn-dark" role="button" href={% url 'delete-post' post.id %}>Delete post</a>
+                <a class="btn btn-dark" role="button" href={% url 'edit-post' post.id %}>Edit post</a>
+            </div>
         {% endif %}
-        <p>----------------------------------------</p>
-    {% endfor %}
+        {% for comment in post.comments.all %}
+            <div class="card" style="width: auto">
+                <div class="card-body">
+                    <h5 class="card-title">{{ comment.author }}</h5>
+                    <h6 class="card-subtitle mb-5 text-muted">{{ comment.date_pub }}</h6>
+                    <p class="card-text">{{ comment.text | safe }}</p>
+                </div>
+            </div>
+            {% if user.is_authenticated and comment.author == user %}
+                <form action="{% url 'delete-comment' comment.id %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-dark mt-3 mb-3" type="submit">Delete</button>
+                </form>
+            {% endif %}
+        {% endfor %}
+        {% if user.is_authenticated %}
+            <div class="container-fluid p-0 mt-3">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-dark mb-2" type="submit">Send</button>
+                </form>
+            </div>
+        {% else %}
+            <p>Please sign in to comment</p>
+        {% endif %}
+    </div>
 {% endblock %}

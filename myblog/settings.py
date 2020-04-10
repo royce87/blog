@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'ckeditor',
+    'taggit',
 ]
 
 MIDDLEWARE = [
@@ -140,3 +141,12 @@ ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/'
 # ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+
+# CKEDITOR
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'width': 1108,
+    },
+}

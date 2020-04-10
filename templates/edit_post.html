@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Edit post{% endblock %}
+{% block content %}
+    {% if user.is_authenticated and user == post.author %}
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-dark ">Edit</button>
+            <a class="btn btn-dark " href="{% url 'post_detail_url' post.slug %}">Cancel</a>
+        </form>
+    {% else %}
+        <h3>Please, sign in for post editing</h3>
+    {% endif %}
+{% endblock %}
